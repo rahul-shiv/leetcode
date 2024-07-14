@@ -5,6 +5,7 @@ public:
         for(int i = 1;i<m;i++){
             for(int j = 0;j<n;j++){
                 if(j){
+                    //test
                     grid[j]+=grid[j-1];
                 }
             }
