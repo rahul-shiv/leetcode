@@ -26,7 +26,7 @@ public:
             r++;
             k--;
         }
-        ans = vector<int>(arr.begin()+(r-k1),arr.begin()+r);
+        ans = vector<int>(arr.begin()+(l+1),arr.begin()+r);
         return ans;
     }
 };
