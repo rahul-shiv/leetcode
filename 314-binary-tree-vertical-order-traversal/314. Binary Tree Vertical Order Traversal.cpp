@@ -13,27 +13,23 @@ class Solution {
 public:
     vector<vector<int>> verticalOrder(TreeNode* root) {
         if(!root)return {};
-        vector<vector<int>> l,r;
+        unordered_map<int,vector<int>> m;
         queue<pair<TreeNode*,int>> q;
+        vector<vector<int>> ans;
         TreeNode* head;
         int pos;
         q.push({root,0});
+        int l=0,r=0;
         while(!q.empty()){
             tie(head,pos)=q.front();
             q.pop();
-            if(pos>=0){
-                if(pos==r.size())r.push_back({});
-                r[pos].push_back(head->val);
-            }else{
-                int pos2=abs(pos)-1;
-                if(pos2==l.size())l.push_back({});
-                l[pos2].push_back(head->val);
-            }
+            m[pos].push_back(head->val);
+            l=min(l,pos);
+            r=max(r,pos);
             if(head->left)q.push({head->left,pos-1});
             if(head->right)q.push({head->right,pos+1});
         }
-        vector<vector<int>> ans(l.rbegin(),l.rend());
-        ans.insert(ans.end(),r.begin(),r.end());
+        for(int i=l;i<=r;i++) ans.emplace_back(m[i]);
         return ans;
     }
 };
