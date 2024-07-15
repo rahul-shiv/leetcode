@@ -29,7 +29,7 @@ public:
             if(head->left)q.push({head->left,pos-1});
             if(head->right)q.push({head->right,pos+1});
         }
-        for(int i=l;i<=r;i++) ans.emplace_back(m[i]);
+        for(int i=l;i<=r;i++) ans.push_back(move(m[i]));
         return ans;
     }
 };
