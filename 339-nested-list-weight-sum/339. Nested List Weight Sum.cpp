@@ -30,7 +30,7 @@
 class Solution {
     int solve(vector<NestedInteger>& nestedList, int depth = 1){
         int s = 0;
-        for(auto ele:nestedList){
+        for(auto &ele:nestedList){
             if(ele.isInteger()){
                 s+=ele.getInteger()*depth;
             }else{
