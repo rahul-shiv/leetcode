@@ -1,15 +1,15 @@
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        set<pair<int,int>,greater<>> s;
+        priority_queue<pair<int,int>> s;
         vector<int> ans; 
         for(int i = 0;i<k-1;i++){
-            s.insert({nums[i],i});
+            s.push({nums[i],i});
         }
         for(int i = k-1;i<nums.size();i++){
-            s.insert({nums[i],i});
-            while(s.begin()->second<i-k+1)s.erase(s.begin());
-            ans.push_back(s.begin()->first);
+            s.push({nums[i],i});
+            while(s.top().second<i-k+1)s.pop();
+            ans.push_back(s.top().first);
         }
         return ans;
     }
