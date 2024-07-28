@@ -1,28 +1,31 @@
 class Solution {
-    vector<bool> vis;
-    vector<vector<int>> g;
-    void dfs(int u){
-        vis[u]=true;
-        for(auto v:g[u]){
-            if(!vis[v]){
-                dfs(v);
-            }
-        }
+    vector<int> id,sz;
+    int find(int x){
+        if(x==id[x])return x;
+        return id[x]=find(id[x]);
     }
 public:
     int countComponents(int n, vector<vector<int>>& edges) {
-        vis = vector<bool>(n);
-        g = vector<vector<int>>(n);
-        for(auto edge:edges){
-            g[edge[0]].push_back(edge[1]);
-            g[edge[1]].push_back(edge[0]);
-        }
+        id = vector<int>(n);
+        sz = vector<int>(n,1);
         int ans = 0;
         for(int i = 0; i < n; i++){
-            if(!vis[i]){
-                dfs(i);
-                ans++;
+            id[i]=i;
+        }
+        for(auto e:edges){
+            int a = find(e[0]);
+            int b = find(e[1]);
+            if(a==b)continue;
+            if(sz[a]>sz[b]){
+                swap(e[0],e[1]);
+                swap(a,b);
             }
+            id[a]=b;
+            sz[b]+=sz[a];
+            find(e[0]);
+        }
+        for(int i = 0; i < n; i++){
+            if(id[i]==i)ans++;
         }
         return ans;
     }
