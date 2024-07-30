@@ -1,9 +1,9 @@
 class Solution {
     vector<vector<int>> ans;
-    void solve(vector<int>& candidates, int target, int i, vector<int> & curr){
+    void solve(vector<int>& candidates, int target, int i, vector<int> curr){
         if(target<0 or i>=candidates.size())return;
         if(target==0){
-            ans.push_back(curr);
+            ans.emplace_back(move(curr));
             return;
         }
         curr.push_back(candidates[i]);
@@ -13,9 +13,9 @@ class Solution {
     }
 public:
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<int> curr;
+        vector<int> v;
         sort(candidates.begin(),candidates.end());
-        solve(candidates,target,0, curr);
+        solve(candidates, target, 0, v);
         return ans;
     }
 };
