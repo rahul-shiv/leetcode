@@ -3,7 +3,7 @@ class Solution {
     void solve(vector<int>& candidates, int target, int i, vector<int> &curr){
         if(target<0 or i>=candidates.size())return;
         if(target==0){
-            ans.push_back(curr);
+            ans.emplace_back(curr);
             return;
         }
         curr.push_back(candidates[i]);
