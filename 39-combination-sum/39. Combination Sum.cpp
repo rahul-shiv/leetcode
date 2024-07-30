@@ -1,6 +1,6 @@
 class Solution {
     vector<vector<int>> ans;
-    void solve(vector<int>& candidates, int target, int i, vector<int> curr){
+    void solve(vector<int>& candidates, int target, int i, vector<int> &curr){
         if(target<0 or i>=candidates.size())return;
         if(target==0){
             ans.push_back(curr);
