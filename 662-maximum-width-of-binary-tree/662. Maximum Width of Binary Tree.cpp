@@ -13,7 +13,7 @@ class Solution {
 public:
     int widthOfBinaryTree(TreeNode* root) {
         uint64_t ans = 1;
-        unordered_map<int,uint64_t> m;
+        vector<uint64_t> m(3000,-1);
         queue<tuple<TreeNode*,uint64_t,uint64_t>> q;
         uint64_t d,p;
         TreeNode*curr;
@@ -21,11 +21,10 @@ public:
         while(!q.empty()){
             tie(curr,d,p) = q.front();
             q.pop();
-            auto it = m.find(d);
-            if(it==m.end()){
+            if(m[d]==-1){
                 m[d]=p;
             }else{
-                ans = max(ans,p-it->second+1);
+                ans = max(ans,p-m[d]+1);
             }
             if(curr->left){
                 q.push({curr->left,d+1,p*2});
