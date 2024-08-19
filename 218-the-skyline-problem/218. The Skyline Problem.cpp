@@ -26,7 +26,7 @@ public:
                 if(s.empty()){
                     currh=0;
                     if(!ans.empty() and i==ans.back()[0])ans.back()[1]=currh;
-                    else ans.push_back({i,0});
+                    else ans.push_back({i,currh});
                 }else{
                     currh=*s.rbegin();
                     if(currh<h){
@@ -38,7 +38,7 @@ public:
                 if(h>currh){
                     currh=h;
                     if(!ans.empty() and i==ans.back()[0])ans.back()[1]=currh;
-                    else ans.push_back({i,h});
+                    else ans.push_back({i,currh});
                 }
                 s.insert(h);
             }
