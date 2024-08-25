@@ -47,12 +47,13 @@ class Solution {
             if(check(x,y)){
                 auto it = t->m.find(board[x][y]);
                 if(it!=t->m.end()){
-                    solve(board, it->second, vis, x, y);
-                    vis[x][y]=false;
                     if(!it->second->cnt){
                         delete it->second;
                         t->m.erase(it);
+                        continue;
                     }
+                    solve(board, it->second, vis, x, y);
+                    vis[x][y]=false;
                 }
             }
         }
