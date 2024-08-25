@@ -20,14 +20,11 @@ class trie{
         }
     }
     void del(string &word, int i = 0){
+        this->cnt--;
         if(i < word.length()){
             auto it = this->m.find(word[i]);
             it->second->del(word, i+1);
-            --(it->second->cnt);
-        }else{
-            this->s="";
         }
-        if(i==0)this->cnt--;
     }
 };
 class Solution {
@@ -40,7 +37,7 @@ class Solution {
         if(t->s.length()){
             ans.push_back(t->s);
             t->s="";
-            // roott->del(t->s);
+            roott->del(t->s);
         }
         int dirs[][2] = {{0,1},{1,0},{-1,0},{0,-1}}, x,y;
         #define check(x,y) x<m and y<n and x>=0 and y>=0 and !vis[x][y]
