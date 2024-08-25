@@ -39,7 +39,8 @@ class Solution {
         if(t==nullptr)return;
         if(t->s.length()){
             ans.push_back(t->s);
-            roott->del(t->s);
+            t->s="";
+            // roott->del(t->s);
         }
         int dirs[][2] = {{0,1},{1,0},{-1,0},{0,-1}}, x,y;
         #define check(x,y) x<m and y<n and x>=0 and y>=0 and !vis[x][y]
@@ -73,7 +74,6 @@ public:
                 if(it!=roott->m.end()){
                     vector<vector<bool>> vis(m,vector<bool>(n));
                     solve(board, it->second, vis, i, j);
-                    // cout<<"=======\n";
                 }
                 if(!roott->cnt)break;
             }
