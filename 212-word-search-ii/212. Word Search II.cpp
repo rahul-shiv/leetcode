@@ -20,14 +20,11 @@ class trie{
         }
     }
     void del(string &word, int i = 0){
+        this->cnt--;
         if(i < word.length()){
             auto it = this->m.find(word[i]);
             it->second->del(word, i+1);
-            --(it->second->cnt);
-        }else{
-            this->s="";
         }
-        if(i==0)this->cnt--;
     }
 };
 class Solution {
@@ -39,6 +36,7 @@ class Solution {
         if(t==nullptr)return;
         if(t->s.length()){
             ans.push_back(t->s);
+            t->s="";
             roott->del(t->s);
         }
         int dirs[][2] = {{0,1},{1,0},{-1,0},{0,-1}}, x,y;
@@ -73,7 +71,6 @@ public:
                 if(it!=roott->m.end()){
                     vector<vector<bool>> vis(m,vector<bool>(n));
                     solve(board, it->second, vis, i, j);
-                    // cout<<"=======\n";
                 }
                 if(!roott->cnt)break;
             }
