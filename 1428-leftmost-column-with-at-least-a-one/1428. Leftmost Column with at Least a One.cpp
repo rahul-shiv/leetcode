@@ -29,6 +29,7 @@ public:
         for(int i = 0; i < m; i++){
             int x = find(binaryMatrix,i,0,ans);
             ans = min(ans,x);
+            if(!ans)break;
         }
         return ans==n?-1:ans;
     }
