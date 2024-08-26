@@ -1,4 +1,3 @@
-#define INF 2147483647
 class Solution {
 public:
     void wallsAndGates(vector<vector<int>>& rooms) {
@@ -12,7 +11,7 @@ public:
                 }
             }
         }
-        #define check(x,y) x<m and y<n and x>=0 and y>=0 and rooms[x][y]==INF
+        #define check(x,y) x<m and y<n and x>=0 and y>=0 and rooms[x][y]==2147483647
         while(!q.empty()){
             tie(x,y,d) = q.front();
             q.pop();
