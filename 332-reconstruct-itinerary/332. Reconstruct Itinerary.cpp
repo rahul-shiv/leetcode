@@ -7,7 +7,7 @@ public:
         if(ans.size()==n){
             return true;
         }
-        bool t = false, temp;
+        bool t = false;
         auto it = m[curr].begin();
         while(it!=m[curr].end()){
             auto next = *it;
