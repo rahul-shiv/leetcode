@@ -21,6 +21,7 @@ public:
     int largestIsland(vector<vector<int>>& grid) {
         int n = grid.size();
         int dirs[][2]={{0,1},{1,0},{0,-1},{-1,0}};
+        id.reserve(n*n);
         sz = vector<int>(n*n,0);
         for(int i = 0; i < n;i++){
             for(int j = 0; j < n;j++){
