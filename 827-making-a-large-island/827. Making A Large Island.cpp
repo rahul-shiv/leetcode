@@ -15,7 +15,6 @@ class Solution {
         }
         id[v]=id[u];
         sz[u]+=sz[v];
-        find(i);
         find(j);
     }
 public:
@@ -29,7 +28,7 @@ public:
                 if(grid[i][j])sz[i*n+j]=1;
             }
         }
-        int x,y;
+        int x,y,p;
         for(int i = 0; i < n;i++){
             for(int j = 0; j < n;j++){
                 if(grid[i][j]){
@@ -57,10 +56,11 @@ public:
                         x = i+dir[0];
                         y = j+dir[1];
                         if(check(x,y)){
-                            auto it = s.find(id[find(x*n+y)]);
+                            p = find(x*n+y);
+                            auto it = s.find(id[p]);
                             if(it==s.end()){
-                                s.insert(id[find(x*n+y)]);
-                                temp+=sz[find(x*n+y)];
+                                s.insert(id[p]);
+                                temp+=sz[p];
                             }
                         }
                     }
