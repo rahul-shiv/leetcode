@@ -58,9 +58,9 @@ public:
                         y = j+dir[1];
                         if(check(x,y)){
                             p = find(x*n+y);
-                            auto it = s.find(id[p]);
+                            auto it = s.find(p);
                             if(it==s.end()){
-                                s.insert(id[p]);
+                                s.insert(p);
                                 temp+=sz[p];
                             }
                         }
