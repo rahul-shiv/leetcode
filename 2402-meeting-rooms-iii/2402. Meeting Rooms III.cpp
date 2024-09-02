@@ -1,5 +1,10 @@
 class Solution {
 public:
+    Solution(){
+         ios_base::sync_with_stdio(false);
+         cin.tie(NULL);
+         cout.tie(NULL);
+    }
     int mostBooked(int n, vector<vector<int>>& meetings) {
         sort(meetings.begin(),meetings.end());
         priority_queue<pair<uint64_t,int>,vector<pair<uint64_t,int>>,greater<pair<uint64_t,int>>> pq;
