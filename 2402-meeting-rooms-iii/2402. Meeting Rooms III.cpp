@@ -4,35 +4,35 @@ public:
         sort(meetings.begin(),meetings.end());
         priority_queue<pair<uint64_t,int>,vector<pair<uint64_t,int>>,greater<pair<uint64_t,int>>> pq;
         pair<uint64_t,int> p;
-        set<int> s;
+        priority_queue<int> s;
         uint64_t d;
-        int ans = 0;
+        int ans = 0, room;
         vector<int> v(n);
         for(int i = 0; i <n;i++){
-            s.insert(i);
+            s.push(-i);
         }
         for(auto m:meetings){
             d = 0;
             while(!pq.empty() and m[0]>=pq.top().first){
                 p = pq.top();
                 pq.pop();
-                s.insert(p.second);
+                s.push(-p.second);
             }
             if(pq.size()==n){
                 p = pq.top();
                 pq.pop();
                 d=max((uint64_t)0,p.first-m[0]);
-                s.insert(p.second);
+                s.push(-p.second);
             }
-            auto it = s.begin();
-            pq.push({m[1]+d,*it});
-            v[*it]++;
-            if(v[*it]>v[ans]){
-                ans=*it;
-            }else if(v[*it]==v[ans]){
-                ans = min(*it,ans);
+            room = -s.top();
+            pq.push({m[1]+d,room});
+            v[room]++;
+            if(v[room]>v[ans]){
+                ans=room;
+            }else if(v[room]==v[ans]){
+                ans = min(room,ans);
             }
-            s.erase(it);
+            s.pop();
         }
         return ans;
     }
