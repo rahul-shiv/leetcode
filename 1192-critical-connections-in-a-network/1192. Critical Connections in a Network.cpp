@@ -8,7 +8,7 @@ public:
         for(auto to:g[v]){
             if(to==p)continue;
             if(tin[to]!=-1){
-                low[v]=min(low[v],low[to]);
+                low[v]=min(low[v],tin[to]);
             }else{
                 solve(to,v);
                 low[v]=min(low[v],low[to]);
