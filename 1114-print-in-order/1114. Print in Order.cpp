@@ -12,6 +12,7 @@ public:
         // printFirst() outputs "first". Do not change or remove this line.
         printFirst();
         x=2;
+        lock.unlock();
         cv.notify_all();
     }
 
@@ -22,6 +23,7 @@ public:
         // printSecond() outputs "second". Do not change or remove this line.
         printSecond();
         x=3;
+        lock.unlock();
         cv.notify_all();
     }
 
