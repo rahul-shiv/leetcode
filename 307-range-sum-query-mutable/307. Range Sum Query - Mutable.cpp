@@ -1,11 +1,13 @@
 class NumArray {
     vector<int> bit;
     vector<int> nums;
-    #define LSB(x) x&(-x)
+    #define LSB(x) (x&-x)
     void construct(){
-        bit = vector<int>(nums.size()+1);
-        for(int i = 0; i<nums.size();i++){
-            add(i+1,nums[i]);
+        for(int i = 1; i<=bit.size();i++){
+            int x = i + LSB(i);
+            if(x<bit.size()){
+                bit[x]+=bit[i];
+            }
         }
     }
 
@@ -17,15 +19,11 @@ class NumArray {
         }
         return sum;
     }
-    void add(int index, int val){
-        while(index<bit.size()){
-            bit[index]+= val;
-            index += LSB(index);
-        }
-    }
 public:
     NumArray(vector<int>& nums) {
         this->nums = nums;
+        bit.push_back(0);
+        bit.insert(bit.begin()+1,nums.begin(),nums.end());
         construct();
     }
     
@@ -33,7 +31,10 @@ public:
         int diff = val - nums[index];
         nums[index] = val;
         index+=1;
-        add(index,diff);
+        while(index<bit.size()){
+            bit[index]+=diff;
+            index += LSB(index);
+        }
     }
     
     int sumRange(int left, int right) {
