@@ -17,9 +17,7 @@ public:
         if(roadId!=curr_road){
             curr_road = roadId;
             turnGreen();
-            crossCar();
-        }else{
-            crossCar();
         }
+        crossCar();
     }
 };
