@@ -1,35 +1,45 @@
 class Foo {
-    condition_variable cv;
-    mutex m;
-    int x;
+    mutex mut;
+    int turn;
+    condition_variable cvar;
 public:
     Foo() {
-        x = 1;
+        turn = 1;
     }
 
     void first(function<void()> printFirst) {
-        std::unique_lock lock(m);
+        unique_lock<mutex> guard(mut);
+
+        while(turn!=1){
+            cvar.wait(guard);
+        }
         // printFirst() outputs "first". Do not change or remove this line.
         printFirst();
-        x=2;
-        cv.notify_all();
+        turn+=1;
+        cvar.notify_all();
     }
 
     void second(function<void()> printSecond) {
-        std::unique_lock lock(m);
-        cv.wait(lock, [&]{return x==2;});
-        
+        unique_lock<mutex> guard(mut);
+        while(turn!=2){
+            cvar.wait(guard);
+        }
         // printSecond() outputs "second". Do not change or remove this line.
         printSecond();
-        x=3;
-        cv.notify_all();
+        turn+=1;
+        cvar.notify_all();
     }
 
     void third(function<void()> printThird) {
-        std::unique_lock lock(m);
-        cv.wait(lock, [&]{return x==3;});
+        unique_lock<mutex> guard(mut);
+        while(turn!=3){
+            cvar.wait(guard);
+        }
         
         // printThird() outputs "third". Do not change or remove this line.
         printThird();
+        turn+=1;
+        cvar.notify_all();
+
     }
 };
