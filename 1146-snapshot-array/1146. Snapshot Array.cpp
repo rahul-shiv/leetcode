@@ -1,47 +1,27 @@
 class SnapshotArray {
-    #define SNAP_INTERVAL  20
     int snap_id;
-    vector<int> arr;
-    unordered_map<int,vector<int>> snap_m;
-    unordered_map<int,unordered_map<int,int>> diff_m;
-    
-    int replay(int index, int snap){
-        int last_snap = (snap/SNAP_INTERVAL)*SNAP_INTERVAL;
-        int val = snap_m[last_snap][index];
-        for(int i = last_snap+1; i <= snap; i++){
-            auto it = diff_m[i].find(index);
-            if(it!=diff_m[i].end()){
-                val = it->second;
-            }
-        }
-        return val;
-    }
+    vector<map<int,int>> arr;
 public:
     SnapshotArray(int length) {
-        arr = vector<int>(length);
-        snap_id = -1;
+        arr = vector<map<int,int>>(length);
+        snap_id = 0;
     }
     
     void set(int index, int val) {
-        arr[index] = val;
-        if((snap_id+1)%SNAP_INTERVAL){
-            diff_m[snap_id+1][index]=val;
+        if(arr[index].empty() or arr[index].rbegin()->second!=val){
+            arr[index][snap_id]=val;
         }
     }
     
     int snap() {
-        snap_id++;
-        if(snap_id%SNAP_INTERVAL==0){
-            snap_m[snap_id] = arr;
-        }
-        return snap_id;
+        return snap_id++;
     }
     
     int get(int index, int snap_id) {
-        if(snap_id%SNAP_INTERVAL==0){
-            return snap_m[snap_id][index];
-        }
-        return replay(index, snap_id);
+        auto it = arr[index].upper_bound(snap_id);
+        if(it==arr[index].begin())return 0;
+        it--;
+        return it->second;
     }
 };
 
