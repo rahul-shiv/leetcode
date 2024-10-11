@@ -13,11 +13,12 @@ public:
         function<void()> turnGreen,  // Use turnGreen() to turn light to green on current road
         function<void()> crossCar    // Use crossCar() to make car cross the intersection
     ) {
-        unique_lock<mutex> guard(m);
+        m.lock();
         if(roadId!=curr_road){
             curr_road = roadId;
             turnGreen();
         }
         crossCar();
+        m.unlock();
     }
 };
