@@ -1,5 +1,5 @@
 class SnapshotArray {
-    #define SNAP_INTERVAL  10
+    #define SNAP_INTERVAL  20
     int snap_id;
     vector<int> arr;
     unordered_map<int,vector<int>> snap_m;
