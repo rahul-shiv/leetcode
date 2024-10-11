@@ -1,31 +1,38 @@
 class H2O {
-    int cnt;
+    int hc;
+    int oc;
     mutex m;
     condition_variable cv;
 public:
     H2O() {
-        cnt = 0;
+        oc=hc=0;
     }
 
     void hydrogen(function<void()> releaseHydrogen) {
         unique_lock<mutex> guard(m);
-        while(cnt==0){
+        while(hc>1){
             cv.wait(guard);
         }
         // releaseHydrogen() outputs "H". Do not change or remove this line.
         releaseHydrogen();
-        cnt-=1;
+        hc+=1;
+        if(oc==1 and hc==2){
+            oc = hc = 0;
+        }
         cv.notify_all();
     }
 
     void oxygen(function<void()> releaseOxygen) {
         unique_lock<mutex> guard(m);
-        while(cnt!=0){
+        while(oc>0){
             cv.wait(guard);
         }
         // releaseOxygen() outputs "O". Do not change or remove this line.
-        cnt+=2;
+        oc+=1;
         releaseOxygen();
+        if(oc==1 and hc==2){
+            oc = hc = 0;
+        }
         cv.notify_all();
     }
 };
