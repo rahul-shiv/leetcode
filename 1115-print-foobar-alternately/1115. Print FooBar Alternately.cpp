@@ -4,35 +4,40 @@ private:
     int turn;
     mutex m;
     condition_variable cv;
-
 public:
     FooBar(int n) {
         this->n = n;
-        this->turn = 0;
+        turn = 0;
     }
 
     void foo(function<void()> printFoo) {
-        
+        unique_lock<mutex> guard(m, defer_lock);
         for (int i = 0; i < n; i++) {
-            unique_lock lock(m);
-            cv.wait(lock, [&]{return turn==0;});
+            guard.lock();
+            while(turn){
+                cv.wait(guard);
+            }
         	// printFoo() outputs "foo". Do not change or remove this line.
         	printFoo();
-            turn = 1;
-            cv.notify_one();
+            turn=1;
+            guard.unlock();
+            cv.notify_all();
         }
     }
 
     void bar(function<void()> printBar) {
-        
+        unique_lock<mutex> guard(m, defer_lock);
         for (int i = 0; i < n; i++) {
-            unique_lock lock(m);
-            cv.wait(lock, [&]{return turn==1;});
+            guard.lock();
+            while(turn==0){
+                cv.wait(guard);
+            }
             
         	// printBar() outputs "bar". Do not change or remove this line.
         	printBar();
-            turn = 0;
-            cv.notify_one();
+            turn=0;
+            guard.unlock();
+            cv.notify_all();
         }
     }
 };
