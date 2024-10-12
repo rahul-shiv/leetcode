@@ -29,10 +29,8 @@ public:
         if(it2==m.begin()){return 0;}
         it2--;
         if(it==it2 and it->first>timestamp-300){
-            cout<<it2->second<<endl;
             return it2->second;
         }else{
-            cout<<it2->second-it->second<<endl;
             return it2->second-it->second;
         }
     }
