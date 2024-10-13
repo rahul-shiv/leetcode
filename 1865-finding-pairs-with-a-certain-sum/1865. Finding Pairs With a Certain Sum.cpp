@@ -1,27 +1,23 @@
 class FindSumPairs {
-    unordered_map<int,int> m1;
     unordered_map<int,int> m2;
-    vector<int> &mapping;
+    vector<int> &nums1,nums2;
 public:
-    FindSumPairs(vector<int>& nums1, vector<int>& nums2): mapping(nums2) {
-        for(auto num:nums1){
-            m1[num]++;
-        }
+    FindSumPairs(vector<int>& nums1, vector<int>& nums2): nums1(nums1), nums2(nums2) {
         for(auto num:nums2){
             m2[num]++;
         }
     }
     
     void add(int index, int val) {
-        m2[mapping[index]]--;
-        mapping[index]+=val;
-        m2[mapping[index]]+=1;
+        m2[nums2[index]]--;
+        nums2[index]+=val;
+        m2[nums2[index]]+=1;
     }
     
     int count(int tot) {
         int ans = 0;
-        for(auto x:m1){
-            ans+=x.second*m2[tot-x.first];
+        for(auto num:nums1){
+            ans+=m2[tot-num];
         }
         return ans;
     }
