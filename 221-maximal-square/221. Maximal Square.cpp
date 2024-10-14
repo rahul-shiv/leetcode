@@ -1,15 +1,17 @@
 class Solution {
 public:
     int maximalSquare(vector<vector<char>>& matrix) {
-        int m = matrix.size(), n = matrix[0].size();
-        vector<vector<int>> x(m,vector<int>(n));
-        int ans = 0;
-        for(int i = 0; i < m; i++){
+        int ans = 0, m = matrix.size(), n = matrix[0].size();
+        vector<vector<int>> v(m,vector<int>(n));
+        for(int i = 0 ; i < m; i++){
             for(int j = 0; j < n; j++){
                 if(matrix[i][j]=='1'){
-                    x[i][j]=1;
-                    if(i and j) x[i][j] = min(x[i-1][j-1],min(x[i][j-1],x[i-1][j]))+1;
-                    ans = max(ans,x[i][j]);
+                    if(i and j){
+                        v[i][j] = min(v[i-1][j-1], min(v[i-1][j],v[i][j-1]))+1;
+                    } else {
+                        v[i][j]=1;
+                    }
+                    ans = max(ans,v[i][j]);
                 }
             }
         }
