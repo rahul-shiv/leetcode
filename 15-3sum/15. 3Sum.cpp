@@ -14,14 +14,13 @@ public:
             while(l<r){
                 if(SUM3==0){
                     ans.push_back({nums[i],nums[l],nums[r]});
-                    
                 }
                 if(SUM3<=0){
                     l++;
                     while(l<r and nums[l]==nums[l-1]){
                         l++;
                     }
-                }else{
+                }else if(SUM3>0){
                     r--;
                     while(l<r and nums[r]==nums[r+1]){
                         r--;
