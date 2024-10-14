@@ -1,33 +1,27 @@
 class Solution {
 public:
     vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-        int m = mat.size(), n = mat[0].size();
-        vector<vector<int>> ans(m,vector<int>(n,1e4));
-        for(int i = 0; i < m; i++){
-            for(int j = 0; j < n; j++){
-                if(mat[i][j]){
-                    if(i){
-                        ans[i][j] = min(ans[i][j],ans[i-1][j]+1);
-                    }
-                    if(j){
-                        ans[i][j] = min(ans[i][j],ans[i][j-1]+1);
-                    }
-                }else{
+        int m = mat.size(), n = mat[0].size(),x,y,nx,ny;
+        int dirs[][2] = {{0,1},{1,0},{0,-1},{-1,0}};
+        vector<vector<int>> ans(m,vector<int>(n,-1));
+        queue<pair<int,int>> q;
+        for(int i = 0; i<m;i++){
+            for(int j = 0; j<n;j++){
+                if(!mat[i][j]){
                     ans[i][j]=0;
+                    q.push({i,j});
                 }
             }
         }
-        for(int i = m-1; i >= 0; i--){
-            for(int j = n-1; j >= 0; j--){
-                if(mat[i][j]){
-                    if(i<m-1){
-                        ans[i][j] = min(ans[i][j],ans[i+1][j]+1);
-                    }
-                    if(j<n-1){
-                        ans[i][j] = min(ans[i][j],ans[i][j+1]+1);
-                    }
-                }else{
-                    ans[i][j]=0;
+        while(!q.empty()){
+            tie(x,y)=q.front();
+            q.pop();
+            for(auto dir:dirs){
+                nx = x+dir[0];
+                ny = y+dir[1];
+                if(nx>=0 and nx<m and ny>=0 and ny<n and ans[nx][ny]==-1){
+                    ans[nx][ny]=ans[x][y]+1;
+                    q.push({nx,ny});
                 }
             }
         }
