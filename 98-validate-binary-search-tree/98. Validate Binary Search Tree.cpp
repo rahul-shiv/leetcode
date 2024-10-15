@@ -11,15 +11,14 @@
  */
 class Solution {
 public:
-    bool isValidBST(TreeNode* root, int64_t small = INT64_MIN, int64_t big = INT64_MAX) {
-        if(root->val<=small or root->val>=big)return false;
-        bool t = true;
-        if(root->left){
-            t &= isValidBST(root->left,small,root->val);
+    bool isValidBST(TreeNode* root, int64_t min = INT64_MIN, int64_t max = INT64_MAX) {
+        bool t = root->val>min and root->val<max;
+        if(t and root->right){
+            t = isValidBST(root->right,root->val,max);
         }
-        if(t && root->right){
-            t &= isValidBST(root->right,root->val,big);
+        if(t and root->left){
+            t = isValidBST(root->left,min,root->val);
         }
-        return t;   
+        return t;
     }
 };
