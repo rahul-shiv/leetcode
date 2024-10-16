@@ -1,6 +1,6 @@
 class Solution {
-    unordered_map<int,int> m;
-    unordered_map<int,int> sz;
+    map<int,int> m;
+    map<int,int> sz;
     int find(int x){
         if(x==m[x])return x;
         return m[x]=find(m[x]);
