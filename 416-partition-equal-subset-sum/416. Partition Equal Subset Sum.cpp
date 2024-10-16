@@ -4,15 +4,15 @@ public:
         int s = accumulate(nums.begin(),nums.end(),0);
         if(s%2)return false;
         s/=2;
-        set<int> dp;
-        dp.insert(0);
+        vector<bool> dp(s+1,false);
+        dp[0]=true;
         for(int i = 0;i<nums.size();i++){
-            for(auto it = dp.rbegin();it!=dp.rend();it++){
-                if(*it+nums[i]==s){
+            for(int j = s;j>=0;j--){
+                if(dp[j] and j+nums[i]==s){
                     return true;
                 }
-                else if(*it+nums[i]<s){
-                    dp.insert(*it+nums[i]);
+                else if(dp[j] and j+nums[i]<s){
+                    dp[j+nums[i]]=1;
                 }
             }
         }
