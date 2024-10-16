@@ -10,19 +10,19 @@
  * };
  */
 class Solution {
-    int dfs(TreeNode*root){
-        int x = 1;
-        if(root->left)x+=dfs(root->left);
-        if(root->right)x+=dfs(root->right);
-        return x;
+    void inorder(TreeNode*root, int &ans, int &k){
+        if(!root or ans>=0)return ;
+        inorder(root->left, ans,k);
+        k--;
+        if(!k){
+            ans=root->val;return;
+        }
+        inorder(root->right,ans,k);
     }
 public:
     int kthSmallest(TreeNode* root, int k) {
-        int l = 0;
-        if(root->left) l = dfs(root->left);
-        if(l>=k) return kthSmallest(root->left,k);
-        k-=l;
-        if(k==1)return root->val;
-        return kthSmallest(root->right, k-1);
+        int ans=-1;
+        inorder(root, ans, k);
+        return ans;
     }
 };
