@@ -2,16 +2,18 @@ class Solution {
 public:
     int minMeetingRooms(vector<vector<int>>& intervals) {
         int ans = 0, n = intervals.size();
-        map<int,int> m;
-        int l = INT_MAX, r = 0;
+        vector<int> s(n),e(n);
         for(int i = 0; i < n; i++){
-            m[intervals[i][0]]+=1;
-            m[intervals[i][1]]-=1;
+            s[i] = intervals[i][0];
+            e[i] = intervals[i][1];
         }
-        int curr = 0;
-        for(auto x:m){
-            curr+=x.second;
-            ans = max(curr,ans);
+        sort(s.begin(),s.end());
+        sort(e.begin(),e.end());
+        int i = 0, j = 0;
+        while(i<n){
+            while(i<n and s[i]<e[j])i++;
+            ans=max(ans,i-j);
+            while(i<n and s[i]>=e[j])j++;
         }
         return ans;
     }
