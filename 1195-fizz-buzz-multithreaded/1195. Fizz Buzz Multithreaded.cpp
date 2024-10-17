@@ -1,26 +1,23 @@
 class FizzBuzz {
 private:
     int n;
-    int x;
-    mutex mut;
+    int i;
     condition_variable cv;
+    mutex m;
 public:
     FizzBuzz(int n) {
         this->n = n;
-        x = 1;
+        i = 1;
     }
 
     // printFizz() outputs "fizz".
     void fizz(function<void()> printFizz) {
         while(true){
-            unique_lock<mutex> guard(mut);
-            while(x<=n and !(x%3==0 and x%5!=0)){
-                cv.wait(guard);
-            }
-            if(x>n)return;
+            unique_lock<mutex> guard(m);
+            cv.wait(guard,[this](){return i>n or (i%3==0 and i%5);});
+            if(i>n)break;
             printFizz();
-            x++;
-            guard.unlock();
+            i++;
             cv.notify_all();
         }
     }
@@ -28,14 +25,11 @@ public:
     // printBuzz() outputs "buzz".
     void buzz(function<void()> printBuzz) {
         while(true){
-            unique_lock<mutex> guard(mut);
-            while(x<=n and !(x%3!=0 and x%5==0)){
-                cv.wait(guard);
-            }
-            if(x>n) return;
+            unique_lock<mutex> guard(m);
+            cv.wait(guard,[this](){return i>n or (i%5==0 and i%3);});
+            if(i>n)break;
             printBuzz();
-            x++;
-            guard.unlock();
+            i++;
             cv.notify_all();
         }
     }
@@ -43,14 +37,11 @@ public:
     // printFizzBuzz() outputs "fizzbuzz".
 	void fizzbuzz(function<void()> printFizzBuzz) {
         while(true){
-            unique_lock<mutex> guard(mut);
-            while(x<=n and !(x%3==0 and x%5==0)){
-                cv.wait(guard);
-            }
-            if(x>n)return;
+            unique_lock<mutex> guard(m);
+            cv.wait(guard,[this](){return i>n or  (i%3==0 and i%5==0);});
+            if(i>n)break;
             printFizzBuzz();
-            x++;
-            guard.unlock();
+            i++;
             cv.notify_all();
         }
     }
@@ -58,14 +49,10 @@ public:
     // printNumber(x) outputs "x", where x is an integer.
     void number(function<void(int)> printNumber) {
         while(true){
-            unique_lock<mutex> guard(mut);
-            while(x<=n and (x%3==0 or x%5==0)){
-                cv.wait(guard);
-            }
-            if(x>n)return;
-            printNumber(x);
-            x++;
-            guard.unlock();
+            unique_lock<mutex> guard(m);
+            cv.wait(guard,[this](){return i>n or (i%3 and i%5);});
+            if(i>n)break;
+            printNumber(i++);
             cv.notify_all();
         }
     }
