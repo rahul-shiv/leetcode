@@ -23,6 +23,6 @@ public:
         
         // releaseOxygen() outputs "O". Do not change or remove this line.
         releaseOxygen();
-        cv.notify_all();
+        cv.notify_one();
     }
 };
