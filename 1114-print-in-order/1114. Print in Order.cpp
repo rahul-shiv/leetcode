@@ -1,45 +1,38 @@
 class Foo {
-    mutex mut;
     int turn;
-    condition_variable cvar;
+    mutex m;
+    condition_variable cv;
 public:
     Foo() {
         turn = 1;
     }
 
     void first(function<void()> printFirst) {
-        unique_lock<mutex> guard(mut);
-
-        while(turn!=1){
-            cvar.wait(guard);
-        }
+        unique_lock<mutex>guard(m);
+        cv.wait(guard,[this](){return this->turn==1;});
         // printFirst() outputs "first". Do not change or remove this line.
         printFirst();
-        turn+=1;
-        cvar.notify_all();
+        turn++;
+        cv.notify_all();
     }
 
     void second(function<void()> printSecond) {
-        unique_lock<mutex> guard(mut);
-        while(turn!=2){
-            cvar.wait(guard);
-        }
+        unique_lock<mutex>guard(m);
+        cv.wait(guard,[this](){return this->turn==2;});
+        
         // printSecond() outputs "second". Do not change or remove this line.
         printSecond();
-        turn+=1;
-        cvar.notify_all();
+        turn++;
+        cv.notify_all();
     }
 
     void third(function<void()> printThird) {
-        unique_lock<mutex> guard(mut);
-        while(turn!=3){
-            cvar.wait(guard);
-        }
+        unique_lock<mutex>guard(m);
+        cv.wait(guard,[this](){return this->turn==3;});
         
         // printThird() outputs "third". Do not change or remove this line.
         printThird();
-        turn+=1;
-        cvar.notify_all();
-
+        turn++;
+        cv.notify_all();
     }
 };
