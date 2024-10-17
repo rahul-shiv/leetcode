@@ -28,19 +28,16 @@
  * };
  */
 class Solution {
-    int solve(vector<NestedInteger>& nestedList, int depth = 1){
-        int s = 0;
-        for(auto &ele:nestedList){
-            if(ele.isInteger()){
-                s+=ele.getInteger()*depth;
+public:
+    int depthSum(vector<NestedInteger>& nestedList, int depth=1) {
+        int ans = 0;
+        for(auto &t:nestedList){
+            if(t.isInteger()){
+                ans+=t.getInteger()*depth;
             }else{
-                s+=solve(ele.getList(), depth+1);
+                ans+=depthSum(t.getList(),depth+1);
             }
         }
-        return s;
-    }
-public:
-    int depthSum(vector<NestedInteger>& nestedList) {
-        return solve(nestedList);
+        return ans;
     }
 };
