@@ -12,10 +12,9 @@ class Solution {
     string hname;
     condition_variable cv;
     queue<string> q;
-    vector<string> result;
     unordered_set<string> s;
     bool done;
-    string extractHname(string &url){
+    string extractHname(string & url){
         size_t pos = string("http://").size();
         pos = url.find('/', pos);
         if (pos == string::npos) {
@@ -24,56 +23,52 @@ class Solution {
         return url.substr(0, pos);
     }
 
-    void worker(HtmlParser &htmlParser){
+    void worker(HtmlParser htmlParser){
         while(true){
-            string url;
-            {
-                unique_lock<mutex> guard(m);
-                cv.wait(guard,[this](){
-                    return !q.empty() or done;
-                });
-                if(q.empty() and done) break;
-                url = q.front();
-                q.pop();
-                ac++;
-            }
-            vector<string> urls;
-            for (auto v:htmlParser.getUrls(url)){
-                if(extractHname(v)!=hname)continue;
-                urls.push_back(v);
-            }
             unique_lock<mutex> guard(m);
-            for(auto v:urls){
+            cv.wait(guard,[this](){
+                return !q.empty() or done;
+            });
+            if(q.empty() and done) break;
+            string url = q.front();
+            q.pop();
+            ac++;
+            guard.unlock();
+            cv.notify_one();
+            for(auto v:htmlParser.getUrls(url)){
+                string vhname = std::move(extractHname(v));
+                if(vhname!=hname)continue;
+                unique_lock<mutex> lock(m);
                 if(!s.contains(v)){
                     s.insert(v);
-                    result.push_back(v);
                     q.push(v);
                 }
+                cv.notify_one();
             }
+            guard.lock();
             ac--;
             if(ac==0 and q.empty()){
                 done=true;
                 cv.notify_all();
                 break;
             }
-            cv.notify_all();
         }
     }
 public:
     vector<string> crawl(string startUrl, HtmlParser htmlParser) {
         ac = 0;
         done=false;
-        result.push_back(startUrl);
         hname = std::move(extractHname(startUrl));
         s.insert(startUrl);
         q.push(startUrl);
-        vector<thread> threads;
-        for(int i = 0; i<thread::hardware_concurrency();i++){
-            threads.emplace_back(thread([&](){worker(htmlParser);}));
+        int tc = thread::hardware_concurrency();
+        vector<thread> threads(tc);
+        for(auto &x:threads){
+            x = thread([&](){worker(htmlParser);});
         }
         for(auto &x:threads){
             x.join();
         }
-        return result;
+        return vector<string>(s.begin(),s.end());
     }
 };
