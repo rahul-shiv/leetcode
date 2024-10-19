@@ -15,7 +15,7 @@ public:
                         dp[i][j]=dp[i+1][j-1]+2;
                     }
                     if(dp[i][j]>ans.length()){
-                        ans = s.substr(i,l);
+                        ans = move(s.substr(i,l));
                     }
                 }
             }
