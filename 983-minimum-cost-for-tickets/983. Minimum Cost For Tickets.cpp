@@ -1,18 +1,16 @@
 class Solution {
 public:
     int mincostTickets(vector<int>& days, vector<int>& costs) {
-        vector<int> ans(days.back()+1,0);
-        int it = 0;
-        for(int i = 1; i <= days.back(); i++){
-            if(i==days[it]){
-                ans[i] = min({ans[i - 1] + costs[0],
-                               ans[max(0, i - 7)] + costs[1],
-                               ans[max(0, i - 30)] + costs[2]});
-                it++;
-            }else{
-                ans[i]=ans[i-1];
-            }
+        map<int,int> m;
+        m[0]=0;
+        for(auto day:days){
+            auto it = prev(m.upper_bound(day-1));
+            m[day] = it->second+costs[0];
+            it = prev(m.upper_bound(day-7));
+            m[day] = min(it->second+costs[1],m[day]);
+            it = prev(m.upper_bound(day-30));
+            m[day] = min(it->second+costs[2],m[day]);
         }
-        return ans[days.back()];
+        return m[days.back()];
     }
 };
