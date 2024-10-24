@@ -11,9 +11,10 @@ public:
         if(it==m.end()){
             return -1;
         }
-        l.erase(it->second.second);
-        l.push_back(key);
-        it->second.second = prev(l.end());
+        // l.erase(it->second.second);
+        // l.push_back(key);
+        // it->second.second = prev(l.end());
+        l.splice(l.end(),l,it->second.second);
         return it->second.first;
     }
     
@@ -27,9 +28,8 @@ public:
             l.push_back(key);
             m[key] = make_pair(value,prev(l.end()));
         }else{
-            l.erase(it->second.second);
-            l.push_back(key);
-            it->second = make_pair(value,prev(l.end()));
+            it->second.first = value;
+            l.splice(l.end(),l,it->second.second);
         }
     }
 };
