@@ -11,20 +11,16 @@ class Solution {
         int n = s1.length();
         vector<int> c1(26), c2(26);
 
-        // Count character frequencies to check if s1 and s2 have the same characters
         for (int i = 0; i < n; i++) {
             c1[s1[i] - 'a']++;
             c2[s2[i] - 'a']++;
         }
         if (c1 != c2) return memo[key] = false;
 
-        // Check all possible splits
         for (int i = 1; i < n; i++) {
-            // Check without swapping
             if (solve(s1.substr(0, i), s2.substr(0, i)) && solve(s1.substr(i), s2.substr(i))) {
                 return memo[key] = true;
             }
-            // Check with swapping
             if (solve(s1.substr(0, i), s2.substr(n - i)) && solve(s1.substr(i), s2.substr(0, n - i))) {
                 return memo[key] = true;
             }
