@@ -14,11 +14,7 @@ public:
                     function<void()> putRightFork) {
 		int lfork = (philosopher-1+NUM)%NUM;
 		int rfork = (philosopher+NUM)%NUM;
-        if(philosopher%2){
-            swap(lfork,rfork);
-        }
-        unique_lock<mutex> lguard(m[lfork]);
-        unique_lock<mutex> rguard(m[rfork]);
+        scoped_lock<mutex,mutex> lguard(m[lfork],m[rfork]);
         pickLeftFork();
         pickRightFork();
         eat();
