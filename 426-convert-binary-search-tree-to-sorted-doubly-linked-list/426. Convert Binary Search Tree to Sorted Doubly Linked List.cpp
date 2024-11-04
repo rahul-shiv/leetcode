@@ -56,11 +56,8 @@ public:
             root->right=r.first;
             r.second->right=head;
             head->left=r.second;
-        }
-        if(!root->right){
+        }else{
             root->right=head;
-        }
-        if(!head->left){
             head->left=root;
         }
         return head;
