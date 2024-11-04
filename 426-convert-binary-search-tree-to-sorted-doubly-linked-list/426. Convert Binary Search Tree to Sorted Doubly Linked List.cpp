@@ -23,52 +23,44 @@ public:
 */
 
 class Solution {
-    Node * solve(Node *root){
-        if(!root)return root;
-        Node*l = solve(root->left);
-        if(l){
-            l->right = root;
-            root->left = l;
+    pair<Node*,Node *> solve(Node *root){
+        if(!root)return {root,root};
+        pair<Node*,Node *>ret = make_pair(root,root);
+        if(root->left){
+            pair<Node*,Node *>l = solve(root->left);
+            l.second->right = root;
+            root->left = l.second;
+            ret.first=l.first;
         }
-        Node*r = solve(root->right);
-        Node *temp = r;
-        if(temp){
-            while(temp->left){
-                temp=temp->left;
-            }
-            temp->left=root;
-            root->right=temp;
-        }else{
-            r = root;
+        if(root->right){
+            pair<Node*,Node *>r = solve(root->right);
+            r.first->left=root;
+            root->right=r.first;
+            ret.second=r.second;
         }
-        return r;
+        return ret;
     }
 public:
     Node* treeToDoublyList(Node* root) {
         if(!root)return root;
-        Node* l = solve(root->left);
-        Node *head;
-        if(l){
-            root->left = l;
-            l->right=root;
-            while(l->left){
-                l=l->left;
-            }
-        }else{
-            l = root;
+        Node* head = root;
+        if(root->left){
+            pair<Node*,Node *>l = solve(root->left);
+            l.second->right = root;
+            root->left = l.second;
+            head = l.first;
         }
-        head = l;
-        Node* r = solve(root->right);
-        if(r){
-            r->right=head;
-            head->left=r;
-            while(r->left){
-                r=r->left;
-            }
-            root->right=r;
-            r->left=root;
-        }else{
+        if(root->right){
+            pair<Node*,Node *>r = solve(root->right);
+            r.first->left=root;
+            root->right=r.first;
+            r.second->right=head;
+            head->left=r.second;
+        }
+        if(!root->right){
             root->right=head;
+        }
+        if(!head->left){
             head->left=root;
         }
         return head;
