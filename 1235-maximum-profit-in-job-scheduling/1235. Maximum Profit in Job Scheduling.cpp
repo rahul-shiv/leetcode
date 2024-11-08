@@ -14,14 +14,9 @@ public:
         for(auto &end:e){
             i = end.second;
             auto it = prev(m.upper_bound(startTime[i]));
-            auto it2 = m.find(end.first);
-            if(it2==m.end()){
-                m[end.first] = it->second+profit[i];
-            }else{
-                it2->second=max(it->second+profit[i],it2->second);
-            }
+            m[end.first]=max(m[end.first],it->second+profit[i]);
             it = m.find(end.first);
-            it2= prev(it);
+            auto it2= prev(it);
             it->second = max(it->second,it2->second);
         }
         return m.rbegin()->second;
