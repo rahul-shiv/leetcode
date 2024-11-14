@@ -9,11 +9,11 @@ public:
             while(r<n-1 and s[r]==s[r+1]){
                 r++;
             }
-            if(r-l+1>=3 and r-l+1>ans){
+            if(r-l+1>=3 and r-l-1>ans){
                 m[s.substr(l,r-l-1)]+=3;
                 ans = max(r-l-1, ans);
             }
-            if(r-l+1>=2 and r-l+1>ans){
+            if(r-l+1>=2 and r-l>ans){
                 s2 = s.substr(l,r-l);
                 m[s2]+=2;
                 if(m[s2]>=3)ans = max(r-l, ans);
