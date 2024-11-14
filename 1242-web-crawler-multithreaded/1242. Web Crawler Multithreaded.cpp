@@ -21,55 +21,55 @@ class Solution {
         return s.substr(0,pos);
     }
     void worker(HtmlParser &htmlParser){
+        string s;
         while(true){
-            string url;
             {
                 unique_lock<mutex> guard(m);
-                cv.wait(guard, [this](){ return stop or !q.empty();});
-                if(stop) break;
+                cv.wait(guard,[&](){return !q.empty() or stop;});
+                if(stop)return;
                 active_threads++;
-                url = q.front();
-                ans.push_back(url);
+                s = q.front();
                 q.pop();
                 cv.notify_one();
             }
-            vector<string> url_list;
-            for(auto next_url:htmlParser.getUrls(url)){
-                if(hname == getHostName(next_url)){
-                    url_list.push_back(next_url);
+            vector<string> to_vis;
+            for(auto v:htmlParser.getUrls(s)){
+                if(hname==getHostName(v)){
+                    to_vis.push_back(v);
                 }
             }
+            shared_ptr<int> t = make_shared<int>(5);
             {
-                lock_guard<mutex> guard(m);
-                for(auto next_url:url_list){
-                    if(!vis.contains(next_url)){
-                        vis.insert(next_url);
-                        q.push(next_url);
+                unique_lock<mutex> guard(m);
+                for(auto v:to_vis){
+                    if(!vis.contains(v)){
+                        vis.insert(v);
+                        ans.push_back(v);
+                        q.push(v);
                     }
                 }
                 active_threads--;
-                if(active_threads==0 and q.empty()){
-                    stop = true;
-                    break;
-                }
+                if(q.empty() and !active_threads) stop=true;
+                cv.notify_all();
+                if(stop) return;
             }
         }
-        cv.notify_one();
     }
 public:
     vector<string> crawl(string startUrl, HtmlParser htmlParser) {
         hname = getHostName(startUrl);
-        vector<thread> thread_pool;
         stop = false;
-        active_threads = 0;
+        vector<thread> thread_pool;
         q.push(startUrl);
         vis.insert(startUrl);
+        ans.push_back(startUrl);
         for(int i = 0;i<thread::hardware_concurrency();i++){
-            thread_pool.emplace_back(thread([&](){worker(htmlParser);}));
+            thread_pool.emplace_back(thread([&](){return worker(htmlParser);}));
         }
-        for(auto &t:thread_pool){
-            t.join();
+        for(int i = 0;i<thread_pool.size();i++){
+            thread_pool[i].join();
         }
         return ans;
+
     }
 };
