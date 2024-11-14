@@ -4,7 +4,7 @@ class WordDictionary {
         unordered_map<char,Trie*> m;
     };
     Trie t;
-    bool recursiveSearch(string word, Trie*temp){
+    bool recursiveSearch(const string &word, Trie*temp){
         for(int i = 0;i<word.length();i++){
             char c = word[i];
             if(c=='.'){
