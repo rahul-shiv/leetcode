@@ -9,16 +9,16 @@ public:
             while(r<n-1 and s[r]==s[r+1]){
                 r++;
             }
-            if(r-l+1>=3){
+            if(r-l+1>=3 and r-l+1>ans){
                 m[s.substr(l,r-l-1)]+=3;
                 ans = max(r-l-1, ans);
             }
-            if(r-l+1>=2){
+            if(r-l+1>=2 and r-l+1>ans){
                 s2 = s.substr(l,r-l);
                 m[s2]+=2;
                 if(m[s2]>=3)ans = max(r-l, ans);
             }
-            if(r-l+1>=1){
+            if(r-l+1>=1 and r-l+1>ans){
                 s2 = s.substr(l,r-l+1);
                 m[s2]+=1;
                 if(m[s2]>=3)ans = max(r-l+1, ans);
