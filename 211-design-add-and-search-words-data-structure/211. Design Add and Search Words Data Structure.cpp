@@ -29,7 +29,9 @@ public:
     
     void addWord(string word) {
         Trie * temp = &t;
+        int i = 0;
         for(auto c:word){
+            // temp->l.insert(word.length()-i);
             auto it = temp->m.find(c);
             if(it==temp->m.end()){
                 temp->m[c]=new Trie();
@@ -37,7 +39,9 @@ public:
             }else{
                 temp = it->second;
             }
+            i++;
         }
+        // temp->l.insert(0);
         temp->terminal=true;
     }
     
