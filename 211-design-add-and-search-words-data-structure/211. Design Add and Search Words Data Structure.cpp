@@ -4,12 +4,12 @@ class WordDictionary {
         unordered_map<char,Trie*> m;
     };
     Trie t;
-    bool recursiveSearch(const string &word, Trie*temp){
-        for(int i = 0;i<word.length();i++){
+    bool recursiveSearch(const string &word, Trie*temp, int i){
+        for(;i<word.length();i++){
             char c = word[i];
             if(c=='.'){
                 for(auto &x:temp->m){
-                    bool t = recursiveSearch(word.substr(i+1),x.second);
+                    bool t = recursiveSearch(word,x.second,i+1);
                     if(t)return true;
                 }
                 return false;
@@ -47,7 +47,7 @@ public:
     
 
     bool search(string word) {
-        return recursiveSearch(word,&t);
+        return recursiveSearch(word,&t,0);
     }
 };
 
