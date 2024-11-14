@@ -3,7 +3,6 @@ class Solution {
     
     bool solve(const string &s1, const string &s2) {
         if (s1 == s2) return true;
-        if (s1.length() != s2.length()) return false;
 
         string key = s1 + "," + s2;
         if (memo.find(key) != memo.end()) return memo[key];
