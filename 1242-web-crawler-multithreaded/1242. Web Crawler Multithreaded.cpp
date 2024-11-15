@@ -50,6 +50,7 @@ class Solution {
                     stop=1;
                     break;
                 }
+                cv.notify_one();
             }
 
         }
