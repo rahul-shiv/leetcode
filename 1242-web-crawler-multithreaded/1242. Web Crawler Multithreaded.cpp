@@ -8,11 +8,11 @@
  */
 class Solution {
     string hname;
+    vector<string> ans;
+    int at;
     mutex m;
     condition_variable cv;
-    int active_threads;
     queue<string> q;
-    vector<string> ans;
     unordered_set<string> vis;
     bool stop;
     string getHostName(string s){
@@ -21,54 +21,52 @@ class Solution {
         return s.substr(0,pos);
     }
     void worker(HtmlParser &htmlParser){
+        string curr;
         while(true){
-            string url;
             {
                 unique_lock<mutex> guard(m);
-                cv.wait(guard, [this](){ return stop or !q.empty();});
+                cv.wait(guard,[&](){return stop or !q.empty();});
                 if(stop) break;
-                active_threads++;
-                url = q.front();
-                ans.push_back(url);
+                at++;
+                curr = q.front();
                 q.pop();
                 cv.notify_one();
             }
-            vector<string> url_list;
-            for(auto next_url:htmlParser.getUrls(url)){
-                if(hname == getHostName(next_url)){
-                    url_list.push_back(next_url);
-                }
+            ans.push_back(curr);
+            vector<string> vec;
+            for(auto &v:htmlParser.getUrls(curr)){
+                if(getHostName(v)==hname)vec.push_back(v);
             }
             {
-                lock_guard<mutex> guard(m);
-                for(auto next_url:url_list){
-                    if(!vis.contains(next_url)){
-                        vis.insert(next_url);
-                        q.push(next_url);
+                scoped_lock<mutex> guard(m);
+                for(auto &v:vec){
+                    if(!vis.contains(v)){
+                        vis.insert(v);
+                        q.push(v);
                     }
                 }
-                active_threads--;
-                if(active_threads==0 and q.empty()){
-                    stop = true;
+                at--;
+                if(!at and q.size()==0){
+                    stop=1;
                     break;
                 }
             }
+
         }
         cv.notify_one();
     }
 public:
     vector<string> crawl(string startUrl, HtmlParser htmlParser) {
-        hname = getHostName(startUrl);
-        vector<thread> thread_pool;
         stop = false;
-        active_threads = 0;
-        q.push(startUrl);
+        hname = getHostName(startUrl);
+        vector<thread> tp;
         vis.insert(startUrl);
-        for(int i = 0;i<thread::hardware_concurrency();i++){
-            thread_pool.emplace_back(thread([&](){worker(htmlParser);}));
+        q.push(startUrl);
+        for(int i = 0; i<thread::hardware_concurrency();i++){
+            tp.emplace_back(thread([&](){return worker(htmlParser);}));
         }
-        for(auto &t:thread_pool){
-            t.join();
+        for(int i = 0;i<tp.size();i++){
+            tp[i].join();
         }
         return ans;
     }
