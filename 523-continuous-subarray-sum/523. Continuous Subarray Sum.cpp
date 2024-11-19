@@ -1,20 +1,16 @@
 class Solution {
 public:
     bool checkSubarraySum(vector<int>& nums, int k) {
-        unordered_map<int,int> x;
-        x[0]=-1;
-        int curr = 0;
-        for(int i = 0;i<nums.size();i++){
-            curr+=nums[i];
-            curr%=k;
-            auto it = x.find(curr);
-            if(it!=x.end()){
-                if(i-it->second>1)return true;
-            }else{
-                x[curr]=i;
-            }
+        if(nums.size()<2)return false;
+        unordered_map<int,bool> m;
+        int n = nums.size();
+        int s = 0,ts=0;
+        for(int i = 0;i<n;i++){
+            ts = (ts+nums[i])%k;
+            if(m[ts])return true;
+            m[s]+=1;
+            s=ts;
         }
-
         return false;
     }
 };
