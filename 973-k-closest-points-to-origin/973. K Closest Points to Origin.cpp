@@ -20,7 +20,7 @@ class Solution {
 
     void quickSelect(vector<vector<int>>& points, int l, int r, int k) {
         int lt, gt;
-        while (l <= r) {
+        while (l < r) {
             int piv = rand() % (r - l + 1) + l;  // Randomly select a pivot
             swap(points[r], points[piv]);
             threeWayPartition(points, l, r, lt, gt);
