@@ -6,14 +6,14 @@ public:
         int i = v.size()-2;
         while(i>=0){
             if (v[i]<v[i+1]){
-                int j = i+1, k = i+1;
-                while(j<v.size()){
-                    if(v[j]>v[i] and v[j]<=v[k]){
-                        k=j;
+                int j = v.size()-1;
+                while(j>i){
+                    if(v[j]>v[i]){
+                        break;
                     }
-                    j++;
+                    j--;
                 }
-                swap(v[i],v[k]);
+                swap(v[i],v[j]);
                 reverse(v.begin()+i+1,v.end());
                 int ans = 0;
                 for(auto &x:v) {
