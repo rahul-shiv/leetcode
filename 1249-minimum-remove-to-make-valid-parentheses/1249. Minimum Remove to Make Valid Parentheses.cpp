@@ -1,37 +1,35 @@
 class Solution {
 public:
     string minRemoveToMakeValid(string s) {
-        int t = 0;
-        string temp="", ans="";
-        for(auto c:s){
-            if(c=='('){
-                t+=1;
-                temp+=c;
-            }else if(c==')'){
-                if(t){
-                    temp+=c;
-                    t-=1;
+        int cnt = 0;
+        string mid,ans;
+        for(int i = s.length()-1;i>=0 ;i--){
+            if(s[i]==')'){
+                cnt+=1;
+                mid+=s[i];
+            }else if(s[i]=='('){
+                if(cnt){
+                    cnt--;
+                    mid+=s[i];
                 }
             }else{
-                temp+=c;
+                mid+=s[i];
             }
         }
-        t=0;
-        reverse(temp.begin(),temp.end());
-        for(auto c:temp){
-            if(c==')'){
-                t+=1;
-                ans+=c;
-            }else if(c=='('){
-                if(t){
-                    ans+=c;
-                    t-=1;
+        cnt=0;
+        for(int i = mid.length()-1;i>=0 ;i--){
+            if(mid[i]=='('){
+                cnt+=1;
+                ans+=mid[i];
+            }else if(mid[i]==')'){
+                if(cnt){
+                    cnt--;
+                    ans+=mid[i];
                 }
             }else{
-                ans+=c;
+                ans+=mid[i];
             }
         }
-        reverse(ans.begin(),ans.end());
         return ans;
     }
 };
