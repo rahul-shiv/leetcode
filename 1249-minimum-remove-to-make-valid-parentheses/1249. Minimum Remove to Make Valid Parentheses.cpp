@@ -15,16 +15,15 @@ public:
             }
         }
         cnt=0;
-        reverse(tmp.begin(),tmp.end());
-        for(auto c:tmp){
-            if(c=='('){
+        for(int i = tmp.length()-1; i >= 0; i--){
+            if(tmp[i]=='('){
                 if(cnt){
                     cnt--;
-                    ans+=c;
+                    ans+=tmp[i];
                 }
             }else{
-                if(c==')')cnt++;
-                ans+=c;
+                if(tmp[i]==')')cnt++;
+                ans+=tmp[i];
             }
         }
         reverse(ans.begin(),ans.end());
