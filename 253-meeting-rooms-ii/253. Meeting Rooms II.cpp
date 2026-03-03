@@ -2,21 +2,22 @@ class Solution {
 public:
     int minMeetingRooms(vector<vector<int>>& intervals) {
         int n = intervals.size(), ans = 0;
-        vector<pair<int,int>> v;
+        vector<int> s,e;
         for(auto x:intervals){
-            v.push_back({x[0],1});
-            v.push_back({x[1],0});
+            s.push_back(x[0]);
+            e.push_back(x[1]);
         }
-        sort(v.begin(),v.end());
-        int curr = 0;
-        for(auto &x:v){
-            if(x.second){
-                curr++;
-                ans=max(curr,ans);
-            }else{
-                curr--;
+        sort(s.begin(),s.end());
+        sort(e.begin(),e.end());
+        int i=0,j=0;
+        while(i<n){
+            while(i<n and s[i]<e[j]){
+                i++;
             }
+            ans = max(ans,i-j);
+            j++;
         }
+        ans = max(ans,i-j);
         return ans;
     }
 };
