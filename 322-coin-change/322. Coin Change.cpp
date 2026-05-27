@@ -1,24 +1,15 @@
 class Solution {
 public:
-    int coinChange(vector<int>& coins, int amount) {
-        if(!amount)return 0;
+    int coinChange(vector<int>& coins, int amt) {
         sort(coins.begin(),coins.end());
-        vector<int> dp(amount+1);
-        queue<int> q;
-        q.push(0);
-        int u,v;
-        while(!q.empty()){
-            u = q.front();
-            q.pop();
+        vector<int> ans(amt+1,1e4+1);
+        ans[0]=0;
+        for(int i = coins[0];i<=amt;i++){
             for(auto coin:coins){
-                v = u+coin;
-                if(v==amount) return dp[u]+1;
-                if(v<amount and !dp[v]){
-                    dp[v]=dp[u]+1;
-                    q.push(v);
-                }
+                if(coin>i)continue;
+                ans[i]=min(ans[i],ans[i-coin]+1);
             }
         }
-        return -1;
+        return ans[amt]==1e4+1?-1:ans[amt];
     }
 };
