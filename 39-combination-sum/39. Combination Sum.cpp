@@ -1,21 +1,24 @@
 class Solution {
-    vector<vector<int>> ans;
-    void solve(vector<int>& candidates, int target, int i, vector<int> &curr){
-        if(target<0 or i>=candidates.size())return;
+    void solve(vector<int> &can, vector<vector<int>> &ans, vector<int> &t, int target, int i){
+        if(i==can.size())return;
         if(target==0){
-            ans.emplace_back(curr);
+            ans.push_back(t);
             return;
         }
-        curr.push_back(candidates[i]);
-        solve(candidates,target-candidates[i],i,curr);
-        curr.pop_back();
-        solve(candidates,target,i+1,curr);
+        if(can[i]<=target){
+            solve(can, ans, t, target, i+1);
+            t.push_back(can[i]);
+            solve(can, ans, t, target-can[i], i);
+            t.pop_back();
+        }
     }
 public:
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<int> v;
-        sort(candidates.begin(),candidates.end());
-        solve(candidates, target, 0, v);
+    vector<vector<int>> combinationSum(vector<int>& can, int target) {
+        sort(can.begin(),can.end());
+        int n = can.size();
+        vector<vector<int>> ans;
+        vector<int> t;
+        solve(can, ans, t, target, 0);
         return ans;
     }
 };
