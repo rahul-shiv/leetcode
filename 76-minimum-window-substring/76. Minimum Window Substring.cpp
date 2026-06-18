@@ -1,29 +1,38 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        vector<int> tv(128),sv(128);
-        int n = s.length(), count=0;
+        string ans,x;
+        queue<int> q;
+        vector<int> m(128,-1);
+        vector<queue<int>> cq(128);
+        int req = t.size();
         for(auto c:t){
-            if(!tv[c-'A'])count++;
-            tv[c-'A']+=1;
-        }
-        int l=0,r=0,minl=INT_MAX,start=-1;
-        while(r<n){
-            while(r<n and count){
-                sv[s[r]-'A']++;
-                if(tv[s[r]-'A'] and tv[s[r]-'A']==sv[s[r]-'A']) count--;
-                r++;
+            if(m[c]==-1){
+                m[c]=0;
             }
-            while(l<r and count==0){
-                if(r-l<minl){
-                    minl=r-l;
-                    start=l;
+            m[c]+=1;
+        }
+        int i = 0, n = s.size(),start=0,end=0;
+        for(; i < n; i++){
+            if(m[s[i]]!=-1){
+                if(cq[s[i]].size()<m[s[i]]){
+                    req--;
+                }else{
+                    cq[s[i]].pop();
                 }
-                sv[s[l]-'A']--;
-                if(tv[s[l]-'A'] and tv[s[l]-'A']>sv[s[l]-'A']) count++;
-                l++;
+                cq[s[i]].push(i);
+                q.push(i);
+
+                while(!q.empty() and !cq[s[q.front()]].empty() and cq[s[q.front()]].front()>q.front()){
+                    q.pop();
+                }
+                if(!req and !end or (i-q.front())<(end-start)){
+                    start=q.front();
+                    end=i;
+                }
             }
         }
-        return minl==INT_MAX?"":s.substr(start,minl);
+        if(!req) ans = s.substr(start,end+1-start);
+        return ans;
     }
 };
