@@ -1,38 +1,32 @@
 class Solution {
+    bool cmp(vector<int>&sv, vector<int>&tv){
+        for(int i = 0; i < 128;i++){
+            if(sv[i]<tv[i])return false;
+        }
+        return true;
+    }
 public:
     string minWindow(string s, string t) {
-        string ans,x;
-        queue<int> q;
-        vector<int> m(128,-1);
-        vector<queue<int>> cq(128);
-        int req = t.size();
+        vector<int> tv(128),sv(128);
+        int n = s.length();
         for(auto c:t){
-            if(m[c]==-1){
-                m[c]=0;
-            }
-            m[c]+=1;
+            tv[c-'A']+=1;
         }
-        int i = 0, n = s.size(),start=0,end=0;
-        for(; i < n; i++){
-            if(m[s[i]]!=-1){
-                if(cq[s[i]].size()<m[s[i]]){
-                    req--;
-                }else{
-                    cq[s[i]].pop();
+        int l=0,r=0,minl=INT_MAX,start=-1;
+        while(r<n){
+            while(r<n and !cmp(sv,tv)){
+                sv[s[r]-'A']++;
+                r++;
+            }
+            while(l<r and cmp(sv,tv)){
+                if(r-l<minl){
+                    minl=r-l;
+                    start=l;
                 }
-                cq[s[i]].push(i);
-                q.push(i);
-
-                while(!q.empty() and !cq[s[q.front()]].empty() and cq[s[q.front()]].front()>q.front()){
-                    q.pop();
-                }
-                if(!req and !end or (i-q.front())<(end-start)){
-                    start=q.front();
-                    end=i;
-                }
+                sv[s[l]-'A']--;
+                l++;
             }
         }
-        if(!req) ans = s.substr(start,end+1-start);
-        return ans;
+        return minl==INT_MAX?"":s.substr(start,minl);
     }
 };
