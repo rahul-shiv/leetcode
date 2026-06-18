@@ -1,10 +1,11 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        unordered_map<char,int> m;
+        vector<int>m(128,INT_MAX);
         int notvalid=0;
         for(auto c:t){
-            m[c]++;
+            if(m[c]==INT_MAX)m[c]=1;
+            else m[c]++;
             if(m[c]==1)notvalid++;
         }
         deque<int> q;
@@ -14,12 +15,11 @@ public:
         while(i<s.length()){
             // find next letter
             while(i<s.length()){
-                auto it = m.find(s[i]);
                 i++;
-                if(it!=m.end()){
+                if(m[s[i-1]]!=INT_MAX){
                     q.push_back(i-1);
-                    it->second--;
-                    if(it->second==0)notvalid--;
+                    m[s[i-1]]--;
+                    if(m[s[i-1]]==0)notvalid--;
                     break;
                 }
             }
