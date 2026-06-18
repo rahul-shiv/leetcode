@@ -10,7 +10,7 @@ public:
         deque<int> q;
         int cnt = t.length();
         string ans=s;
-        int i=0;
+        int i=0,l=0,r=INT_MAX-2;
         while(i<s.length()){
             // find next letter
             while(i<s.length()){
@@ -29,10 +29,11 @@ public:
                 q.pop_front();
             }
             // save
-            if(!notvalid and ans.length()>(i-q.front())){
-                ans=s.substr(q.front(),i-q.front());
+            if(!notvalid and (r-l+1)>(i-q.front())){
+                r=i;
+                l=q.front();
             }
         }
-        return notvalid?"":ans;
+        return notvalid?"":s.substr(l,r-l);
     }
 };
