@@ -1,29 +1,38 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        vector<int> tv(128),sv(128);
-        int n = s.length(), count=0;
+        unordered_map<char,int> m;
+        int notvalid=0;
         for(auto c:t){
-            if(!tv[c-'A'])count++;
-            tv[c-'A']+=1;
+            m[c]++;
+            if(m[c]==1)notvalid++;
         }
-        int l=0,r=0,minl=INT_MAX,start=-1;
-        while(r<n){
-            while(r<n and count){
-                sv[s[r]-'A']++;
-                if(tv[s[r]-'A'] and tv[s[r]-'A']==sv[s[r]-'A']) count--;
-                r++;
-            }
-            while(l<r and count==0){
-                if(r-l<minl){
-                    minl=r-l;
-                    start=l;
+        deque<int> q;
+        int cnt = t.length();
+        string ans=s;
+        int i=0;
+        while(i<s.length()){
+            // find next letter
+            while(i<s.length()){
+                auto it = m.find(s[i]);
+                i++;
+                if(it!=m.end()){
+                    q.push_back(i-1);
+                    it->second--;
+                    if(it->second==0)notvalid--;
+                    break;
                 }
-                sv[s[l]-'A']--;
-                if(tv[s[l]-'A'] and tv[s[l]-'A']>sv[s[l]-'A']) count++;
-                l++;
+            }
+            // squeeze till still valid
+            while(!notvalid and m[s[q.front()]]<0){
+                m[s[q.front()]]++;
+                q.pop_front();
+            }
+            // save
+            if(!notvalid and ans.length()>(i-q.front())){
+                ans=s.substr(q.front(),i-q.front());
             }
         }
-        return minl==INT_MAX?"":s.substr(start,minl);
+        return notvalid?"":ans;
     }
 };
