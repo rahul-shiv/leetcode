@@ -1,46 +1,34 @@
 class Solution {
     vector<int> id,sz;
     int find(int x){
-        while(x!=id[x]){
-            id[x]=id[id[x]];
-            x = id[x];
-        }
-        return id[x];
+        if(x==id[x])return x;
+        return id[x]=find(id[x]);
     }
-    void uni(int x, int y){
+    void onion(int x, int y){
         int a = find(x);
         int b = find(y);
-        if(a!=b){
-            if(sz[a]<sz[b]){
-                swap(a,b);
-                swap(x,y);
-            }
-            sz[a]+=sz[b];
-            id[b]=id[a];
-        }
+        if(a==b)return;
+        if(sz[a]<sz[b])swap(a,b);
+        id[b]=a;
+        sz[a]+=sz[b];
     }
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
-        map<string,int> a2i;
-        
         int n = accounts.size();
-        id = vector<int> (n);
-        sz = vector<int> (n,1);
-        for(int i = 0; i < n; i++) id[i]=i;
-
-        int ind = 0;
-        for(auto account:accounts){
-            for(int i = 1; i < account.size(); i++){
-                auto it = a2i.find(account[i]);
+        sz = vector<int>(n,1);
+        id = vector<int>(n);
+        map<string,int> a2i;
+        for(int i = 0; i < n; i++){
+            id[i]=i;
+            for(int j = 1; j<accounts[i].size(); j++){
+                auto it = a2i.find(accounts[i][j]);
                 if(it==a2i.end()){
-                    a2i[account[i]] = ind;
+                    a2i[accounts[i][j]]=i;
                 }else{
-                    uni(it->second,ind);
+                    onion(it->second,i);
                 }
             }
-            ind++;
         }
-
         vector<vector<string>> ans;
         vector<int> i2a(n,-1);
         int pos;
@@ -53,6 +41,7 @@ public:
             }
             ans[i2a[pos]].push_back(a2i_it.first);
         }
+
         return ans;
     }
 };
