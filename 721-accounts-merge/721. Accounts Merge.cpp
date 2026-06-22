@@ -17,7 +17,6 @@ class Solution {
             }
             sz[a]+=sz[b];
             id[b]=id[a];
-            find(y);
         }
     }
 public:
@@ -41,7 +40,6 @@ public:
             }
             ind++;
         }
-        for(int i = 0; i < n; i++) find(i);
 
         vector<vector<string>> ans;
         vector<int> i2a(n,-1);
