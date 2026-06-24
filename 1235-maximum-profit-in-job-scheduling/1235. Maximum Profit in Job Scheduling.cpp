@@ -2,27 +2,23 @@ class Solution {
 public:
     int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
         int n = startTime.size();
-        vector<vector<int>> v;
-        for(int i = 0; i < n; i++){
-            v.emplace_back(vector<int>({endTime[i], startTime[i], profit[i]}));
+        vector<pair<int,int>> e(n);
+        for(int i = 0;i<n;i++){
+            e[i].first=endTime[i];
+            e[i].second=i;
         }
-        sort(v.begin(),v.end());
-        vector<pair<int,int>> m;
-        m.push_back({0,0});
-        int ret =0 ;
-
-        for(int i = 0; i < n; i++){
-            auto it = upper_bound(m.begin(),m.end(),make_pair(v[i][0],INT_MAX));
-            it--;
-            auto it2 = upper_bound(m.begin(),m.end(),make_pair(v[i][1],INT_MAX));
-            it2--;
-            if(it->first==v[i][0]){
-                m.back().second = max(it->second, it2->second+v[i][2]);
-            }else{
-                m.push_back({v[i][0], max(it->second, it2->second+v[i][2])});
-            }
-            ret = max(ret, m.back().second);
+        sort(e.begin(),e.end());
+        map<int,int> m;
+        m[0]=0;
+        int i;
+        for(auto &end:e){
+            i = end.second;
+            auto it = prev(m.upper_bound(startTime[i]));
+            m[end.first]=max(m[end.first],it->second+profit[i]);
+            it = m.find(end.first);
+            auto it2= prev(it);
+            it->second = max(it->second,it2->second);
         }
-        return ret;
+        return m.rbegin()->second;
     }
 };
