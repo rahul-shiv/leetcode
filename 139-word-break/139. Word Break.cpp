@@ -1,24 +1,20 @@
 class Solution {
-    unordered_set<string> words;
-    vector<bool> vis;
-    bool solve(string s, int i){
-        if(i==s.length())return true;
-        bool t = false;
-        vis[i]=true;
-        for(int j = 1;j<=s.length()-i;j++){
-            string word = s.substr(i,j);
-            auto it = words.find(word);
-            if(it!=words.end() and !vis[i+j]){
-                t = solve(s,i+j);
-                if(t) break;
-            }
-        }
-        return t;
-    }
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-        words = unordered_set<string>(wordDict.begin(),wordDict.end());
-        vis = vector<bool>(s.size());
-        return solve(s, 0);
+        int n = s.size();
+        vector<bool> valid(n+1);
+        valid[0]=true;
+        for(int i = 0 ; i < n; i++){
+            if(!valid[i])continue;
+            for(auto &word:wordDict){
+                int j = 0;
+                for(;j<word.length();j++)if(s[i+j]!=word[j])break;
+                if(j==word.length())valid[i+j]=true;
+            }
+        }
+        return valid[n];
     }
 };
+
+//   l e e t c o d e
+// 1 0 0 0 1 0 0 0 1
