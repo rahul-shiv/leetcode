@@ -1,24 +1,35 @@
 class Solution {
 public:
-    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
-        int n = startTime.size();
-        vector<pair<int,int>> e(n);
-        for(int i = 0;i<n;i++){
-            e[i].first=endTime[i];
-            e[i].second=i;
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit){
+        vector<pair<int, pair<int,int>>>times;
+        for(int i=0;i<startTime.size();i++){
+            times.push_back({endTime[i], {startTime[i], profit[i]}});
+            
         }
-        sort(e.begin(),e.end());
-        map<int,int> m;
-        m[0]=0;
-        int i;
-        for(auto &end:e){
-            i = end.second;
-            auto it = prev(m.upper_bound(startTime[i]));
-            m[end.first]=max(m[end.first],it->second+profit[i]);
-            it = m.find(end.first);
-            auto it2= prev(it);
-            it->second = max(it->second,it2->second);
+        sort(times.begin(), times.end());
+        map<int,int> dp;
+        
+        for(auto time:times){
+            
+            //for each time
+            // - we need val of previous end time lesser than end time
+            // - we need val of previous end time <= start time of us 
+
+            auto it = dp.lower_bound(time.first);
+            if(it!=dp.begin()){
+                it--;
+                dp[time.first] = max(dp[time.first],it->second);
+            }
+            it = dp.upper_bound(time.second.first);
+            int x = 0;
+            if(it!=dp.begin()){
+                it--;
+                x = it->second;
+            }
+            dp[time.first] = max(dp[time.first],x+time.second.second);
+            // cout << time.first << " "<< dp[time.first] << endl;
+            // dp[time.first] = max(dp[time.first],max(it->second+time.second.second);
         }
-        return m.rbegin()->second;
+        return dp.rbegin()->second;
     }
 };
