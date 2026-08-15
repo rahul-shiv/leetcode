@@ -8,6 +8,8 @@ class Interval:
 
 class Solution:
     def employeeFreeTime(self, schedule: '[[Interval]]') -> '[Interval]':
+        def f(y):
+            print('[',y.start,y.end,'], ',end = ' ')
         def findFree(sched):
             ret = [Interval(float('-inf'),sched[0].start)]
             for i in range(1,len(sched)):
@@ -19,12 +21,22 @@ class Solution:
             freeSchedule.append(findFree(sched))
         def merge(x,y):
             ret = []
+            for z in x:
+                f(z)
+            print()
+            for z in y:
+                f(z)
+            print()
             for i in x:
                 for j in y:
                     if i.end<j.start or i.start>j.end :
                         continue
                     else:
                         ret.append(Interval(max(i.start,j.start),min(i.end,j.end)))
+            print("=====")
+            for z in ret:
+                f(z)
+            print("\n=====")
             return ret
         ans = freeSchedule[0]
         for i in range(1,len(freeSchedule)):
