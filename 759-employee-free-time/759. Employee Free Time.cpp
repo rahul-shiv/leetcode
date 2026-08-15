@@ -28,7 +28,7 @@ public:
         int prev = flat[0][0];
         for(auto x:flat){
             if(prev<x[0]){
-                ans.push_back(Interval(prev,x[0]));
+                ans.emplace_back(Interval(prev,x[0]));
             }
             prev=max(prev,x[1]);
         }
