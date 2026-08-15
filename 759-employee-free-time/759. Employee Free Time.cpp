@@ -17,26 +17,25 @@ public:
 class Solution {
 public:
     vector<Interval> employeeFreeTime(vector<vector<Interval>> schedule) {
-        vector<Interval> schedules;
-        for(auto s:schedule){
-            for(auto x:s){
-                schedules.push_back(x);
-            }
-        }      
-        sort(schedules.begin(),schedules.end(),[](const auto &a, const auto &b){
-            return a.start==b.start?a.end<b.end:a.start<b.start;
-        });
-        vector<Interval> mi;
+        int prev = -1;
         vector<Interval> ans;
-        for(auto x:schedules){
-            if(mi.empty()|| mi.back().end<x.start){
-                mi.push_back(x);
-            }else{
-                mi.back().end=max(mi.back().end,x.end);
+        int c=0;
+        vector<int> starts;
+        vector<int> ends;
+
+        for(int i = 0; i<schedule.size();i++){
+            for(auto s:schedule[i]){
+                starts.push_back(s.start);
+                ends.push_back(s.end);
             }
         }
-        for(int i = 1;i<mi.size();i++){
-            ans.emplace_back(Interval(mi[i-1].end,mi[i].start));
+        sort(starts.begin(),starts.end());
+        sort(ends.begin(),ends.end());
+        int s = 0, e = 0, n = starts.size();
+        while(s<n){
+            while(ends[e]<starts[s]){prev=ends[e];e++;}
+            if(e==s and prev!=-1) ans.push_back(Interval(prev,starts[s]));
+            s++;
         }
         return ans;
     }
