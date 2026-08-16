@@ -1,34 +1,27 @@
 class Solution {
 public:
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        int ans = INT_MAX;
-        queue<vector<int>> q;
-        vector<int> vis(n,INT_MAX);
-        int u,l,cost;
+        vector<pair<int,int>> ans(n,{INT_MAX,INT_MAX});
         vector<vector<pair<int,int>>> g(n);
-        for(auto f:flights){
-            g[f[0]].push_back({f[1],f[2]});
+        for(auto flight:flights){
+            g[flight[0]].push_back({flight[1],flight[2]});
         }
-        q.push({src,0,0});
-        while(!q.empty()){
-            u = q.front()[0];
-            l = q.front()[1];
-            cost = q.front()[2];
-            q.pop();
-            if(u==dst) ans = min(ans,cost);
-            for(auto v:g[u]){
-                if(l==k+1) break;
-                if(vis[v.first]>cost+v.second){
-                    vis[v.first]=cost+v.second;
-                    q.push({v.first,l+1,cost+v.second});
+        priority_queue<tuple<int,int,int>> pq;
+        ans[src]={0,0};
+        pq.push({0,-1,src});
+        int u,hops,dist,v,vdist;
+        while(!pq.empty()){
+            tie(dist,hops,u)=pq.top();
+            pq.pop();
+            for(auto &vinfo:g[u]){
+                tie(v,vdist)=vinfo;
+                if(hops+1<=k and (hops+1<ans[v].second or dist+vdist<ans[v].first)){
+                    ans[v].first=min(dist+vdist,ans[v].first);
+                    ans[v].second=min(hops+1,ans[v].second);
+                    pq.push({dist+vdist,hops+1,v});
                 }
             }
         }
-        return ans==INT_MAX?-1:ans;
+        return ans[dst].first==INT_MAX?-1:ans[dst].first;
     }
 };
-
-// 0->1  1
-// 0->2 5
-// 1 ->2 1
-// 2-> 3 1
