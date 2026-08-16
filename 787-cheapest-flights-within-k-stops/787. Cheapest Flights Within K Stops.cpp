@@ -1,27 +1,27 @@
 class Solution {
 public:
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        vector<vector<pair<int,int>>> adj(n);
+        vector<vector<pair<int,int>>> adjs(n);
+        vector<int> mins(n,INT_MAX);
+        mins[src]=0;
         for(auto flight:flights){
-            adj[flight[0]].push_back({flight[1],flight[2]});
+            adjs[flight[0]].push_back({flight[1],flight[2]});
         }
         queue<tuple<int,int,int>> q;
-        vector<int> dist(n,INT_MAX);
-        q.push({src,0,0});
-        dist[src] = 0;
-        int u,l,d;
+        q.push(make_tuple(src,k,0));
+        int x,hop,nextx,nextp,w,nw;
         while(!q.empty()){
-            tie(u,l,d) = q.front();
+            tie(x,hop,w) = q.front();
             q.pop();
-            if(l<=k){
-                for(auto v:adj[u]){
-                    if(d+v.second<dist[v.first]){
-                        dist[v.first] = d+v.second;
-                        q.push({v.first,l+1,dist[v.first]});
-                    }
+            for(auto adj:adjs[x]){
+                nextx = adj.first;
+                nw = w + adj.second;
+                if(hop>=0 and nw<mins[nextx]){
+                    mins[nextx]=nw;
+                    q.push({nextx,hop-1,nw});
                 }
             }
         }
-        return dist[dst]==INT_MAX?-1:dist[dst];
+        return mins[dst]==INT_MAX?-1:mins[dst];
     }
 };
