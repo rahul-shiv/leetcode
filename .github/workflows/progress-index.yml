@@ -1,0 +1,17 @@
+name: progress-index
+on: { push: { branches: [main] } }
+permissions: { contents: write }
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: |
+          git log --date=short --pretty=format:'@%ad' --name-only -- . ':!progress.json' \
+          | awk '/^@/{d=substr($0,2);next} NF{split($0,a,"/"); if(a[1] ~ /^[0-9]+-/ && !(a[1] in m)) m[a[1]]=d} END{printf "{"; n=0; for(k in m){printf "%s\"%s\":\"%s\"", (n++?",":""), k, m[k]} print "}"}' > progress.json
+      - run: |
+          git config user.name progress-bot
+          git config user.email bot@users.noreply.github.com
+          git add progress.json
+          git diff --cached --quiet || (git commit -m "update progress.json [skip ci]" && git push)
